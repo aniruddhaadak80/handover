@@ -5,7 +5,7 @@ export const siteConfig = {
     "Handover is a shared care board for one person receiving care. Log doses and observations, run a deterministic handover-readiness check, and seal a brief the next caregiver can act on. Built for the friend who was doing all of this from memory.",
   repository: "aniruddhaadak80/handover",
   repoUrl: "https://github.com/aniruddhaadak80/handover",
-  liveUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://handover.vercel.app",
+  liveUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://handover-olive.vercel.app",
   topics: [
     "caregiving",
     "medication-management",

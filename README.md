@@ -8,18 +8,18 @@ Log the dose. Let a deterministic engine tell you what the next caregiver is
 about to get wrong. Seal a brief they can act on at 3am without asking you
 anything.
 
-[![Live app](https://img.shields.io/badge/live-verified-6fd8a4?style=flat-square&labelColor=0b1a18)](https://handover.vercel.app)
+[![Live app](https://img.shields.io/badge/live-verified-6fd8a4?style=flat-square&labelColor=0b1a18)](https://handover-olive.vercel.app)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-6fd8a4?style=flat-square&labelColor=0b1a18)](https://nextjs.org)
 [![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-6fd8a4?style=flat-square&labelColor=0b1a18)](https://www.typescriptlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f2b134?style=flat-square&labelColor=0b1a18)](./LICENSE)
 [![openFDA + RxNorm](https://img.shields.io/badge/live%20labels-openFDA%20%2B%20RxNorm-f2b134?style=flat-square&labelColor=0b1a18)](https://open.fda.gov/apis/drug/label/)
 [![MCP tools](https://img.shields.io/badge/agent-MCP%20JSON--RPC%202.0-a78bfa?style=flat-square&labelColor=0b1a18)](https://modelcontextprotocol.io)
 
-**[Live app](https://handover.vercel.app)**
-· **[GitHub](https://github.com/aniruddhaadak80/handover)**
-· **[API](#-api)**
-· **[Agent](#-agent-console)**
-· **[Issues](https://github.com/aniruddhaadak80/handover/issues)**
+**[Live app](https://handover-olive.vercel.app)**
+Â· **[GitHub](https://github.com/aniruddhaadak80/handover)**
+Â· **[API](#-api)**
+Â· **[Agent](#-agent-console)**
+Â· **[Issues](https://github.com/aniruddhaadak80/handover/issues)**
 
 </div>
 
@@ -47,7 +47,7 @@ actually act on alone.
 
 It stays general enough that anyone can start a board tonight.
 
-## ✨ Features
+## âœ¨ Features
 
 - **One board per person, no account.** Log doses, observations, physio notes
   and tasks. Each entry carries who owns it, so "somebody should do this" has
@@ -76,7 +76,7 @@ It stays general enough that anyone can start a board tonight.
   with idempotent mutations.
 - **Zero required keys.** No model key, no data key, nothing to sign up for.
 
-## 🚀 Quickstart
+## ðŸš€ Quickstart
 
 ```bash
 git clone https://github.com/aniruddhaadak80/handover
@@ -121,7 +121,7 @@ npm run test:e2e    # Playwright journey, desktop + mobile
 npm run verify:live # end-to-end proof against a running deployment
 ```
 
-## 📁 Project map
+## ðŸ“ Project map
 
 | Route | What it is for | Writes |
 | --- | --- | --- |
@@ -151,7 +151,7 @@ npm run verify:live # end-to-end proof against a running deployment
 | `/api/mcp` | POST | JSON-RPC 2.0: `initialize`, `tools/list`, `tools/call` |
 | `/mcp.json` | GET | Agent manifest with the real deployed endpoint |
 
-## 🏗 Architecture
+## ðŸ— Architecture
 
 ```mermaid
 graph LR
@@ -182,7 +182,7 @@ graph LR
 The repository adapter is the only thing that changes between local and
 production. Same schema, same queries, same domain logic.
 
-## 📡 Data provenance and the honest fallback
+## ðŸ“¡ Data provenance and the honest fallback
 
 ```mermaid
 graph TB
@@ -217,7 +217,7 @@ graph TB
 - Fallback never replaces user-created data. It only ever fills in what is
   missing.
 
-## 🧮 The readiness engine
+## ðŸ§® The readiness engine
 
 ```mermaid
 graph TB
@@ -241,7 +241,7 @@ graph TB
   class D,E verified
 ```
 
-`score = Σ(weight × value) / Σ(weight)`, each factor scored 0-100.
+`score = Î£(weight Ã— value) / Î£(weight)`, each factor scored 0-100.
 
 | Factor | Default weight | What it penalises |
 | --- | --- | --- |
@@ -258,7 +258,7 @@ parameter, never calls the clock, and sorts every input, so the same board at
 the same moment always produces byte-identical output. 48 unit tests cover
 normal, boundary, empty, malformed and repeat cases.
 
-## 🤖 Agent console
+## ðŸ¤– Agent console
 
 ```mermaid
 sequenceDiagram
@@ -287,7 +287,7 @@ Tools: `list_boards`, `get_board`, `analyze_handover`, `lookup_drug`,
 Point any MCP client at the deployed endpoint:
 
 ```bash
-curl -s https://handover.vercel.app/mcp.json
+curl -s https://handover-olive.vercel.app/mcp.json
 ```
 
 ```json
@@ -295,7 +295,7 @@ curl -s https://handover.vercel.app/mcp.json
   "mcpServers": {
     "handover": {
       "type": "http",
-      "url": "https://handover.vercel.app/api/mcp"
+      "url": "https://handover-olive.vercel.app/api/mcp"
     }
   }
 }
@@ -304,7 +304,7 @@ curl -s https://handover.vercel.app/mcp.json
 Scope is the calling browser's session cookie, so an agent can only ever touch
 the boards that session owns.
 
-## 🔏 Integrity and seal replay
+## ðŸ” Integrity and seal replay
 
 ```mermaid
 graph LR
@@ -332,10 +332,10 @@ vectors in `tests/seal.test.ts`) generated the known-answer vectors that the
 suite asserts, so a refactor cannot quietly rewrite history. Deletes keep a
 tombstone so the chain still replays end to end after a board is soft-deleted.
 
-## 🔌 API
+## ðŸ”Œ API
 
 ```bash
-BASE=https://handover.vercel.app
+BASE=https://handover-olive.vercel.app
 
 # Health: proves the store answers a real write and read-back
 curl -s $BASE/api/health
@@ -383,12 +383,12 @@ environment value:
 { "error": { "code": "validation_failed", "message": "The request body did not pass validation." } }
 ```
 
-`400` malformed JSON · `404` not yours or not there · `405`/unsupported media ·
-`409` a write landed first or the board is deleted · `413` body over 64 kB ·
-`422` validation · `428` destructive action without `confirm` · `503` store
+`400` malformed JSON Â· `404` not yours or not there Â· `405`/unsupported media Â·
+`409` a write landed first or the board is deleted Â· `413` body over 64 kB Â·
+`422` validation Â· `428` destructive action without `confirm` Â· `503` store
 unavailable.
 
-## 🔒 Security and ownership
+## ðŸ”’ Security and ownership
 
 - **No accounts.** A 128-bit session id in an HTTP-only, `SameSite=Lax` cookie,
   minted in Edge middleware before any handler runs. Every query is scoped by
@@ -408,9 +408,9 @@ unavailable.
 
 Full detail in [SECURITY.md](./SECURITY.md).
 
-## 🗺️ Roadmap
+## ðŸ—ºï¸ Roadmap
 
-**Now — shipped and verified**
+**Now â€” shipped and verified**
 
 - [x] Boards, entries, ownership, soft deletes
 - [x] Six-factor deterministic engine with itemized evidence
@@ -424,7 +424,7 @@ graph LR
   A["Log"] --> B["Check"] --> C["Seal"] --> D["Export"]
 ```
 
-**Next — the gaps I know about**
+**Next â€” the gaps I know about**
 
 - [ ] Accounts with household roles, so a board survives a cleared cookie and
       two siblings can both edit without stepping on each other
@@ -441,7 +441,7 @@ graph LR
   A["Accounts"] --> B["Offline queue"] --> C["Fridge grid"] --> D["Monitoring nudges"]
 ```
 
-**Later — only if someone asks**
+**Later â€” only if someone asks**
 
 - [ ] An on-device open-weights reader for pasted discharge summaries, so a
       parent's paperwork never has to travel to a server we control
@@ -455,14 +455,14 @@ graph LR
 
 Nothing on this list is promised, dated, or partially shipped.
 
-## 🤝 Contributing
+## ðŸ¤ Contributing
 
-Small, focused PRs. The one rule: **do not make the engine guess** — if you
+Small, focused PRs. The one rule: **do not make the engine guess** â€” if you
 change a factor, you must be able to say what evidence caused each penalty.
 Read [CONTRIBUTING.md](./CONTRIBUTING.md), then run `npm run typecheck`, `npm run
 lint`, `npm run test` and `npm run build`.
 
-## 📄 Attribution
+## ðŸ“„ Attribution
 
 - Label data: [openFDA drug label API](https://open.fda.gov/apis/drug/label/) (public domain, U.S. FDA)
 - Concept ids: [NIH RxNorm](https://lhncbc.nlm.nih.gov/RxNav/APIs/RxNormAPIs.html) (U.S. National Library of Medicine)

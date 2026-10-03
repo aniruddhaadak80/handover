@@ -24,3 +24,4 @@ blob-report
 next-env.d.ts
 npm-debug.log*
 yarn-error.log*
+.vercel

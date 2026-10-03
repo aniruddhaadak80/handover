@@ -16,10 +16,10 @@ anything.
 [![MCP tools](https://img.shields.io/badge/agent-MCP%20JSON--RPC%202.0-a78bfa?style=flat-square&labelColor=0b1a18)](https://modelcontextprotocol.io)
 
 **[Live app](https://handover-olive.vercel.app)**
-Â· **[GitHub](https://github.com/aniruddhaadak80/handover)**
-Â· **[API](#-api)**
-Â· **[Agent](#-agent-console)**
-Â· **[Issues](https://github.com/aniruddhaadak80/handover/issues)**
+· **[GitHub](https://github.com/aniruddhaadak80/handover)**
+· **[API](#-api)**
+· **[Agent](#-agent-console)**
+· **[Issues](https://github.com/aniruddhaadak80/handover/issues)**
 
 </div>
 
@@ -47,7 +47,15 @@ actually act on alone.
 
 It stays general enough that anyone can start a board tonight.
 
-## âœ¨ Features
+![The board: pinned dose cards on the left, the readiness engine on the right with every penalty quoted back and its openFDA source named](./public/hero-card.png)
+
+That is the real worked example, running on the deployment at the top of this
+file. Every penalty on the right is traceable to a card on the left: the `-35`
+names the two rows that resolve to one ingredient, the `-30` names the two
+doses whose food instructions conflict 30 minutes apart, and each line prints
+the upstream label it was scored against.
+
+## ✨ Features
 
 - **One board per person, no account.** Log doses, observations, physio notes
   and tasks. Each entry carries who owns it, so "somebody should do this" has
@@ -76,7 +84,7 @@ It stays general enough that anyone can start a board tonight.
   with idempotent mutations.
 - **Zero required keys.** No model key, no data key, nothing to sign up for.
 
-## ðŸš€ Quickstart
+## 🚀 Quickstart
 
 ```bash
 git clone https://github.com/aniruddhaadak80/handover
@@ -121,7 +129,7 @@ npm run test:e2e    # Playwright journey, desktop + mobile
 npm run verify:live # end-to-end proof against a running deployment
 ```
 
-## ðŸ“ Project map
+## 📁 Project map
 
 | Route | What it is for | Writes |
 | --- | --- | --- |
@@ -151,7 +159,7 @@ npm run verify:live # end-to-end proof against a running deployment
 | `/api/mcp` | POST | JSON-RPC 2.0: `initialize`, `tools/list`, `tools/call` |
 | `/mcp.json` | GET | Agent manifest with the real deployed endpoint |
 
-## ðŸ— Architecture
+## 🏗 Architecture
 
 ```mermaid
 graph LR
@@ -182,7 +190,7 @@ graph LR
 The repository adapter is the only thing that changes between local and
 production. Same schema, same queries, same domain logic.
 
-## ðŸ“¡ Data provenance and the honest fallback
+## 📡 Data provenance and the honest fallback
 
 ```mermaid
 graph TB
@@ -217,7 +225,9 @@ graph TB
 - Fallback never replaces user-created data. It only ever fills in what is
   missing.
 
-## ðŸ§® The readiness engine
+![The handover screen: the outgoing and incoming columns either side of a scrubbable shift rail](./public/handover-scrubber.png)
+
+## 🧮 The readiness engine
 
 ```mermaid
 graph TB
@@ -241,7 +251,7 @@ graph TB
   class D,E verified
 ```
 
-`score = Î£(weight Ã— value) / Î£(weight)`, each factor scored 0-100.
+`score = sum(weight * value) / sum(weight)`, each factor scored 0-100.
 
 | Factor | Default weight | What it penalises |
 | --- | --- | --- |
@@ -252,13 +262,13 @@ graph TB
 | Handover freshness | 0.14 | Nothing recorded for 6, 12 or 24 hours; entries with no named owner |
 | Documentation | 0.10 | A dose with no amount written down; a note too thin to act on |
 
-`ready` when nothing is below 85 and no factor is under 85; `hold` when any
-factor is under 55, or the board is empty. The engine takes `asOf` as a
-parameter, never calls the clock, and sorts every input, so the same board at
-the same moment always produces byte-identical output. 48 unit tests cover
-normal, boundary, empty, malformed and repeat cases.
+`ready` when every factor is clear; `hold` when any factor is blocking, or the
+board is empty. The engine takes `asOf` as a parameter, never calls the clock,
+and sorts every input, so the same board at the same moment always produces
+byte-identical output. 48 unit tests cover normal, boundary, empty, malformed
+and repeat cases.
 
-## ðŸ¤– Agent console
+## 🤖 Agent console
 
 ```mermaid
 sequenceDiagram
@@ -284,8 +294,6 @@ Tools: `list_boards`, `get_board`, `analyze_handover`, `lookup_drug`,
 `extract_care_rows`, `verify_integrity`, `log_entry`, `update_entry_status`,
 `seal_handover`.
 
-Point any MCP client at the deployed endpoint:
-
 ```bash
 curl -s https://handover-olive.vercel.app/mcp.json
 ```
@@ -304,7 +312,9 @@ curl -s https://handover-olive.vercel.app/mcp.json
 Scope is the calling browser's session cookie, so an agent can only ever touch
 the boards that session owns.
 
-## ðŸ” Integrity and seal replay
+![The regimen screen: medicines from the board against live public label sections](./public/regimen.png)
+
+## 🔏 Integrity and seal replay
 
 ```mermaid
 graph LR
@@ -316,23 +326,21 @@ graph LR
   F --> G["Replay walks the chain"]
   G --> H["First broken seq, or all clear"]
   classDef verified fill:#34d399,color:#0a2c1c,stroke:#34d399
-  classDef risk fill:#fb7185,color:#3a0e08,stroke:#fb7185
   class B,D,F verified
   class H verified
 ```
 
 ```
-seal_n = SHA-384( UTF-8(prevSeal) || canonicalJson(event_n) )
-canonicalJson = keys sorted recursively, array order preserved
-genesis prevSeal = "0" repeated 96 times
+seal_n  =  SHA-384( UTF-8(prevSeal) || canonicalJson(event_n) )
+canonicalJson  =  keys sorted recursively, array order preserved
+genesis prevSeal  =  "0" repeated 96 times
 ```
 
-`scripts/print-vectors.ts` (removed before release, reproduced by the pinned
-vectors in `tests/seal.test.ts`) generated the known-answer vectors that the
-suite asserts, so a refactor cannot quietly rewrite history. Deletes keep a
-tombstone so the chain still replays end to end after a board is soft-deleted.
+Known-answer vectors are pinned in `tests/seal.test.ts`, so a refactor cannot
+quietly rewrite what already happened. Deletes keep a tombstone so the chain
+still replays end to end after a board is soft-deleted.
 
-## ðŸ”Œ API
+## 🔌 API
 
 ```bash
 BASE=https://handover-olive.vercel.app
@@ -340,38 +348,32 @@ BASE=https://handover-olive.vercel.app
 # Health: proves the store answers a real write and read-back
 curl -s $BASE/api/health
 
-# Create a board
-BOARD=$(curl -s -X POST $BASE/api/boards \
-  -H 'content-type: application/json' \
-  -c jar.txt -b jar.txt \
-  -d '{"subjectName":"My dad","timezone":"UTC","caregivers":["Priya","Ravi"],"withExampleEntries":true}' \
-  | sed -n 's/.*"id":"\([^"]*\)".*/\1/p' | head -1)
+# Create a board, keeping the session cookie so you own it
+curl -s -X POST $BASE/api/boards \
+  -H 'content-type: application/json' -c jar.txt -b jar.txt \
+  -d '{"subjectName":"My dad","timezone":"UTC","caregivers":["Priya","Ravi"],"withExampleEntries":true}'
 
-# Log a dose, and read it back
+# Log a dose
 curl -s -X POST $BASE/api/boards/$BOARD/entries \
   -H 'content-type: application/json' -b jar.txt -c jar.txt \
   -d '{"kind":"dose","status":"due","title":"Metformin 500 mg","detail":"With breakfast.","medication":"Metformin 500 mg","doseAmount":"1 tablet","instructions":"with food","assignedTo":"Priya"}'
 
-curl -s $BASE/api/boards/$BOARD -b jar.txt | head -c 400
+# Read it back
+curl -s $BASE/api/boards/$BOARD -b jar.txt
 
 # Decide on it
-ENTRY=$(curl -s $BASE/api/boards/$BOARD/entries -b jar.txt | sed -n 's/.*"id":"\(ent_[^"]*\)".*/\1/p' | head -1)
 curl -s -X PATCH $BASE/api/entries/$ENTRY \
   -H 'content-type: application/json' -b jar.txt \
   -d "{\"boardId\":\"$BOARD\",\"status\":\"given\"}"
 
-# Run the engine
-curl -s "$BASE/api/boards/$BOARD/handover" -b jar.txt | head -c 600
-
-# Replay the chain
+# Run the engine, replay the chain, export the brief
+curl -s "$BASE/api/boards/$BOARD/handover" -b jar.txt
 curl -s "$BASE/api/boards/$BOARD/integrity" -b jar.txt
-
-# Agent, over JSON-RPC
-curl -s -X POST $BASE/api/mcp -H 'content-type: application/json' -b jar.txt \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"analyze_handover","arguments":{"boardId":"'"$BOARD"'"}}}'
-
-# Export the brief
 curl -s "$BASE/api/export/$BOARD?format=markdown" -o handover.md
+
+# The agent, over JSON-RPC
+curl -s -X POST $BASE/api/mcp -H 'content-type: application/json' -b jar.txt \
+  -d "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"analyze_handover\",\"arguments\":{\"boardId\":\"$BOARD\"}}}"
 ```
 
 ### Errors
@@ -383,12 +385,11 @@ environment value:
 { "error": { "code": "validation_failed", "message": "The request body did not pass validation." } }
 ```
 
-`400` malformed JSON Â· `404` not yours or not there Â· `405`/unsupported media Â·
-`409` a write landed first or the board is deleted Â· `413` body over 64 kB Â·
-`422` validation Â· `428` destructive action without `confirm` Â· `503` store
-unavailable.
+`400` malformed JSON · `404` not yours, or not there · `409` a write landed first
+or the board is deleted · `413` body over 64 kB · `422` validation · `428`
+destructive action without `confirm` · `503` store unavailable.
 
-## ðŸ”’ Security and ownership
+## 🔒 Security and ownership
 
 - **No accounts.** A 128-bit session id in an HTTP-only, `SameSite=Lax` cookie,
   minted in Edge middleware before any handler runs. Every query is scoped by
@@ -396,7 +397,7 @@ unavailable.
 - **Parameterised SQL only.** Each domain row and its audit event are written in
   a single statement, so a row can never exist without its sealed event.
 - **Validated input.** Zod schemas with length and enum bounds on every mutating
-  body; 64 kB cap; allowlisted external origins; time-boxed upstream calls.
+  body; a 64 kB cap; allowlisted external origins; time-boxed upstream calls.
 - **Destructive actions are guarded and reversible-looking.** Board and entry
   deletion require an explicit `confirm` echo and are soft, leaving a tombstone.
 - **Best-effort abuse controls, stated honestly.** Per-session cookie ownership,
@@ -408,9 +409,9 @@ unavailable.
 
 Full detail in [SECURITY.md](./SECURITY.md).
 
-## ðŸ—ºï¸ Roadmap
+## 🗺️ Roadmap
 
-**Now â€” shipped and verified**
+**Now: shipped and verified**
 
 - [x] Boards, entries, ownership, soft deletes
 - [x] Six-factor deterministic engine with itemized evidence
@@ -424,7 +425,7 @@ graph LR
   A["Log"] --> B["Check"] --> C["Seal"] --> D["Export"]
 ```
 
-**Next â€” the gaps I know about**
+**Next: the gaps I know about**
 
 - [ ] Accounts with household roles, so a board survives a cleared cookie and
       two siblings can both edit without stepping on each other
@@ -441,7 +442,7 @@ graph LR
   A["Accounts"] --> B["Offline queue"] --> C["Fridge grid"] --> D["Monitoring nudges"]
 ```
 
-**Later â€” only if someone asks**
+**Later: only if someone asks**
 
 - [ ] An on-device open-weights reader for pasted discharge summaries, so a
       parent's paperwork never has to travel to a server we control
@@ -455,18 +456,18 @@ graph LR
 
 Nothing on this list is promised, dated, or partially shipped.
 
-## ðŸ¤ Contributing
+## 🤝 Contributing
 
-Small, focused PRs. The one rule: **do not make the engine guess** â€” if you
+Small, focused PRs. The one rule: **do not make the engine guess** — if you
 change a factor, you must be able to say what evidence caused each penalty.
-Read [CONTRIBUTING.md](./CONTRIBUTING.md), then run `npm run typecheck`, `npm run
-lint`, `npm run test` and `npm run build`.
+Read [CONTRIBUTING.md](./CONTRIBUTING.md), then run `npm run typecheck`,
+`npm run lint`, `npm run test` and `npm run build`.
 
-## ðŸ“„ Attribution
+## 📄 Attribution
 
-- Label data: [openFDA drug label API](https://open.fda.gov/apis/drug/label/) (public domain, U.S. FDA)
+- Label data: [openFDA drug label API](https://open.fda.gov/apis/drug/label/) (U.S. FDA, public domain)
 - Concept ids: [NIH RxNorm](https://lhncbc.nlm.nih.gov/RxNav/APIs/RxNormAPIs.html) (U.S. National Library of Medicine)
-- Embedded database for local development and tests: [PGlite](https://pglite.dev) (Postgres compiled to WASM)
+- Embedded database for local development and tests: [PGlite](https://pglite.dev)
 - Agent protocol: [Model Context Protocol](https://modelcontextprotocol.io)
 
 ## License

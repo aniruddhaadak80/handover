@@ -1,0 +1,26 @@
+node_modules
+.next
+out
+build
+.DS_Store
+*.pem
+
+# local embedded database used by the zero-config dev adapter
+.data
+
+# env files
+.env
+.env*.local
+.env.production
+
+# test + tooling output
+coverage
+test-results
+playwright-report
+blob-report
+.playwright
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+yarn-error.log*

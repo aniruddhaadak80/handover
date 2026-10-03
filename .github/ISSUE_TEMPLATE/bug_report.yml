@@ -1,0 +1,38 @@
+name: Bug report
+
+**What happened**
+
+<!-- A short description. -->
+
+**What you expected**
+
+**Steps to reproduce**
+
+1.
+2.
+3.
+
+**Where**
+
+- [ ] Landing page `/`
+- [ ] Care boards `/boards`
+- [ ] A board `/boards/<id>`
+- [ ] Medicines and labels `/boards/<id>/regimen`
+- [ ] Handover `/handover`
+- [ ] Agent console `/agent`
+- [ ] Verify `/verify`
+- [ ] Settings `/settings`
+- [ ] API only
+
+**Environment**
+
+- Deployment URL:
+- Browser and version:
+- `GET /api/health` output (it is safe to paste, it contains no secrets):
+
+**Anything else**
+
+<!--
+Is this about someone's medication safety? Do not put it in a public issue.
+Use the private security channel in SECURITY.md instead.
+-->

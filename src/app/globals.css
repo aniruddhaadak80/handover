@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+/*
+  Night-shift ward board.
+  Deep petrol wall, one warm lamp, chalk rulings, one red pen for conflicts.
+  No optics, no glass, no gradient orbs: the room is lit by a desk lamp.
+*/
+@theme {
+  --color-ward-950: #07100f;
+  --color-ward-900: #0b1a18;
+  --color-ward-850: #0f221f;
+  --color-ward-800: #142b27;
+  --color-ward-700: #1c3833;
+  --color-ward-600: #26473f;
+  --color-lamp-400: #f2b134;
+  --color-lamp-300: #f7c65c;
+  --color-lamp-200: #fbe3a6;
+  --color-chalk: #eaf2ec;
+  --color-chalk-dim: #9db4ac;
+  --color-chalk-faint: #6b837b;
+  --color-alert: #ff6a52;
+  --color-alert-dim: #b8503f;
+  --color-mint: #6fd8a4;
+  --color-mint-dim: #3f8f68;
+  --color-slate-cool: #8aa6ae;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ward-950);
+  color: var(--color-chalk);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    linear-gradient(to bottom, rgb(242 177 52 / 0.05) 0%, rgb(242 177 52 / 0) 34%),
+    repeating-linear-gradient(
+      to bottom,
+      rgb(234 242 236 / 0.045) 0px,
+      rgb(234 242 236 / 0.045) 1px,
+      transparent 1px,
+      transparent 34px
+    );
+  background-attachment: fixed, fixed;
+}
+
+/* Focus is a lamp ring, never a browser default that disappears on dark. */
+:focus-visible {
+  outline: 2px solid var(--color-lamp-300);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-lamp-400);
+  color: var(--color-ward-950);
+}
+
+.stamp {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  border: 1px solid currentColor;
+  padding: 0.15rem 0.45rem;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.stamp--ready {
+  color: var(--color-mint);
+}
+.stamp--caution {
+  color: var(--color-lamp-300);
+}
+.stamp--hold {
+  color: var(--color-alert);
+}
+
+.card {
+  background: var(--color-ward-900);
+  border: 1px solid var(--color-ward-700);
+  border-radius: 3px;
+}
+
+/* Pinned index cards: a small tilt and a pin hole, never a shadow blur. */
+.pin {
+  position: relative;
+  background: var(--color-ward-850);
+  border: 1px solid var(--color-ward-600);
+  border-radius: 2px;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+.pin::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--color-lamp-400);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.5);
+}
+.pin:hover {
+  border-color: var(--color-lamp-400);
+}
+
+.lamp-glow {
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgb(242 177 52 / 0.16) 0%,
+    rgb(242 177 52 / 0.05) 38%,
+    rgb(242 177 52 / 0) 70%
+  );
+}
+
+.lane {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgb(234 242 236 / 0.07) 0px,
+    rgb(234 242 236 / 0.07) 1px,
+    transparent 1px,
+    transparent 44px
+  );
+}
+
+.meter {
+  background: rgb(234 242 236 / 0.09);
+  border: 1px solid var(--color-ward-700);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.meter > span {
+  display: block;
+  height: 100%;
+}
+
+input[type="range"] {
+  accent-color: var(--color-lamp-400);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

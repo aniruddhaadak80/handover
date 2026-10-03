@@ -1,0 +1,20 @@
+name: Feature request
+
+**The job someone was trying to do**
+
+<!--
+Describe the situation, not the feature. "When Priya hands over at 7am she has
+to re-read the whole board to find out what changed" beats "add a diff view".
+-->
+
+**What I tried**
+
+**What I expected**
+
+**Why the current behaviour does not work**
+
+**Scope check**
+
+- [ ] This is a real job for a real person, not a feature for its own sake.
+- [ ] It does not require an API key I do not have.
+- [ ] I would still want it if nobody ever starred the repository.

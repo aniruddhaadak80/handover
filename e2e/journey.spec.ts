@@ -72,7 +72,9 @@ test.describe("primary journey", () => {
     await expect(page.getByText(/tools: [1-9]/)).toBeVisible({ timeout: 30_000 });
     await page.getByRole("button", { name: /log_entry/ }).click();
     await expect(page.getByText("Call log")).toBeVisible();
-    await expect(page.getByText("agent-logged dose")).toBeVisible({ timeout: 60_000 });
+    // The phrase appears in the collapsed request pane and in the open response
+    // pane; assert on the response, which is where the persisted result is.
+    await expect(page.locator("details[open]").getByText("agent-logged dose").first()).toBeVisible({ timeout: 60_000 });
 
     // --- integrity replays after the mutations ---
     await page.goto(`/verify?board=${boardId}`);
